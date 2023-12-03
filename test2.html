@@ -1,0 +1,69 @@
+<html>
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/addons/p5.sound.min.js"></script>
+</head>
+<body>
+  <canvas id="canvas" width="400" height="300"></canvas>
+  <script>
+    // 創建一個 p5.js 的物件
+    var canvas = document.getElementById("canvas");
+    var ctx = canvas.getContext("2d");
+    var img;
+    var sound;
+    var camera;
+    var video;
+    var dataURL;
+
+    // 初始化 p5.js 的物件
+    function setup() {
+      // 清除畫布
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      // 加加載圖片
+      img = loadImage("image.jpg");
+      // 加加載聲音
+      sound = loadSound("sound.mp3");
+      // 初始化攝像頭和視頻元件
+      camera = createCapture(VIDEO);
+      video = createCapture(VIDEO);
+      // 將攝像頭和視頻元件連接到 p5.js 的物件中
+      img.setFrame(camera);
+      video.setFrame(video);
+    }
+
+    // 更新 p5.js 的物件的的狀狀態
+    function draw() {
+      background(220);
+      // 將圖片和聲音顯示在畫布上
+      image(img, 0, 0);
+      sound.play();
+    }
+
+    // 定義一個函數，用於將攝像頭的影像像傳送到後端處理
+    function sendImage() {
+      // 將攝像頭的影像轉換成 base64 編碼的字符串
+      dataURL = canvas.toDataURL("image/png");
+      // 傳送 dataURL 到後端處理，例如使用 fetch API 或 XMLHttpRequest
+      fetch("/send-image", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          image: dataURL
+        })
+      })
+        .then(response => response.json())
+        .then(data => {
+          // 如果果傳送成功，則在畫布上顯示一個提示訊息
+          alert("Image sent successfully!");
+        })
+        .catch(error => {
+          // 如果果傳送失敗，則在畫布上顯示一個錯誤訊息
+          alert("Image sending failed: " + error.message);
+        });
+    }
+
+  </script>
+</body>
+</html>
