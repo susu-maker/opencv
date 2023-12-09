@@ -12,7 +12,8 @@
     <video id="video" width="640" height="480" autoplay></video>
     <button id="snap">開始掃描</button>
     <canvas id="canvas" width="640" height="480"></canvas>
-    <input id="output" style="width:700px" type="text" placeholder="轉換結果" readonly>
+    <div>轉換結果</div>
+    <!-- <div id="output" style="width:700px" type="text" placeholder="轉換結果" readonly></div> -->
     <div id="box"></div>
     <script>
         var video = document.getElementById('video');
@@ -78,17 +79,25 @@
             base64Data = imgdata.data.toString('base64');
             // console.log(loop())
             async function foo() {
-                var odiv=document.createElement("div");
                 
+                //寫到html下方
                 var z = document.createElement('p');
                 let temp = await loop()
                 console.log(temp)
                 z.innerHTML = temp
-                
+                var odiv=document.createElement("div");
                 odiv.appendChild(z);
+                var odiv1=document.createElement("div");
+                y = document.createElement('p');
+                y.innerHTML = "條碼掃描結果:"
+                odiv1.appendChild(y)
+                odiv1.appendChild(odiv);
+                //css
+                odiv1.setAttribute("class","box_inside")
+
                 console.log("good")
                 let obox=document.getElementById("box");
-                obox.appendChild(odiv)
+                obox.appendChild(odiv1)
                 
             }
             foo()

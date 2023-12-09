@@ -1,15 +1,23 @@
 #box{
-    width:500px;
+    width:305px;
+    height:auto;
+    background:rgb(11, 11, 11);
+    display: flex;
+    /* 水平置中 */
+    justify-content: center;    
+    /* 垂直置中 */
+    align-items: center;
+    flex-wrap: wrap;
   }
-#box div{
+/* #box div{
     width:200px;
     height:20px;
     text-align:center;
     font-size:18px;
-    background:rgb(193, 193, 228);
+    background:rgb(9, 9, 220);
     margin-bottom:5px;
     font-family:"DFKai-sb";
-}
+} */
 .description{
     /*文字*/
     font-family:"DFKai-sb";
@@ -19,3 +27,13 @@
     text-align:center;
     color: black;
   }
+.box_inside{
+    margin:2%;
+    width:300px;
+    height: auto;
+    text-align:center;
+    font-size:14px;
+    background:rgb(249, 249, 250);
+    font-family:"DFKai-sb";
+    display:"inline"
+}
