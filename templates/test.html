@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>條碼掃描器</title>
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/addons/p5.sound.min.js"></script>
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/barcode.css') }}">
+<body>
+    <h1>條碼掃描器</h1>
+    <div>運用電腦前鏡頭進行掃描，並將掃描結果印於網頁下方</div>
+    <video id="video" width="640" height="480" autoplay></video>
+    <button id="snap">開始掃描</button>
+    <canvas id="canvas" width="640" height="480"></canvas>
+    <input id="output" style="width:700px" type="text" placeholder="轉換結果" readonly>
+    <div id="box"></div>
+    <script>
+        var video = document.getElementById('video');
+        var canvas = document.getElementById('canvas');
+        var snap = document.getElementById('snap');
+        var context = canvas.getContext('2d', { willReadFrequently: true });
+        async function loop() {
+                context.drawImage(video, 0, 0, 640, 480);
+                imgdata = context.getImageData(0, 0, 640, 480);
+                base64Data = imgdata.data.toString('base64');
+                return await fetch("/barcode", {
+                    method: "POST",
+                    headers: {
+                        'Ver': '1.0',
+                        'fileType' : 'mp4',
+                        'md5'  : '47e954ec481d097e96261d993ec43ba5',
+                        'fileSize' : 276505673,
+                        'Status':'OK',
+                        "Upgrade-Insecure-Requests": "1",   
+                        "Content-Type": 'application/json',
+                        // "Content-Type": "application/x-www-form-urlencoded",
+                        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7"
+                    },
+                    body:JSON.stringify({"image":base64Data})
+                    // body: JSON.stringify({
+                    // image: base64Data
+                    // })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        // 如果果傳送成功，則在畫布上顯示一個提示訊息
+                        // alert("Image sent successfully!");
+                        console.log(data["barcode"])
+                        return data["barcode"]
+
+                            // if(data["barcode"]){
+                            //     return data["barcode"]
+                            // }
+                    })
+                    .catch(error => {
+                        // 如果果傳送失敗，則在畫布上顯示一個錯誤訊息
+                        // alert("Image sending failed: " + error.message);
+                        return loop()
+                    });
+                
+            }
+//主程式
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function(stream) {
+                video.srcObject = stream;
+                video.play();
+            })
+            .catch(function(err) {
+                console.log("An error occurred: " + err);
+            });
+//送請求
+        snap.addEventListener('click', function() {
+            context.drawImage(video, 0, 0, 640, 480);
+            var image = canvas.toDataURL('image/png');
+            // console.log(image);
+            //
+            imgdata = context.getImageData(0, 0, 640, 480);
+            base64Data = imgdata.data.toString('base64');
+            // console.log(loop())
+            async function foo() {
+                var odiv=document.createElement("div");
+                
+                var z = document.createElement('p');
+                let temp = await loop()
+                console.log(temp)
+                z.innerHTML = temp
+                
+                odiv.appendChild(z);
+                console.log("good")
+                let obox=document.getElementById("box");
+                obox.appendChild(odiv)
+                
+            }
+            foo()
+            // console.log(base64Data);
+            // Send the image to the server using Python
+            // ...
+            // var odiv=document.createElement("div");
+            // odiv.appendChild(data["barcode"].toString());
+            // console.log("good")
+            // let obox=document.getElementById("box");
+            // obox.appendChild(odiv);
+            // let result = loop()
+            // console.log(result)
+
+            
+            
+        });
+    </script>
+</body>
+</html>

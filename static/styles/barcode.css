@@ -1,0 +1,21 @@
+#box{
+    width:500px;
+  }
+#box div{
+    width:200px;
+    height:20px;
+    text-align:center;
+    font-size:18px;
+    background:rgb(193, 193, 228);
+    margin-bottom:5px;
+    font-family:"DFKai-sb";
+}
+.description{
+    /*文字*/
+    font-family:"DFKai-sb";
+    font-size:18px;
+    /**/
+    margin:auto;/*box置中*/
+    text-align:center;
+    color: black;
+  }
